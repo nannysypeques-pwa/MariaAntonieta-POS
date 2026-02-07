@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastelería POS</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <meta name="theme-color" content="#ff6b6b">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <section id="login-screen" class="screen active">
+            <div class="login-container glass-panel">
+                <div class="login-header">
+                    <img src="assets/logo.png" alt="Logo Maria Antonieta" class="brand-logo-large">
+                    <h1>Bienvenido</h1>
+                    <p>Sistema de Gestión de Pastelería</p>
+                </div>
+                <form id="login-form">
+                    <div class="input-group">
+                        <span class="material-icons-round">email</span>
+                        <input type="email" id="email" placeholder="Correo electrónico" required>
+                    </div>
+                    <div class="input-group">
+                        <span class="material-icons-round">lock</span>
+                        <input type="password" id="password" placeholder="Contraseña" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Iniciar Sesión</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Main Dashboard -->
+        <section id="dashboard-screen" class="screen">
+            <nav class="sidebar glass-panel">
+                <div class="logo">
+                    <img src="assets/logo.png" alt="Logo" class="brand-logo-small">
+                    <span>M. Antonieta</span>
+                </div>
+                <ul class="nav-links">
+                    <li data-target="pos-view" class="active">
+                        <span class="material-icons-round">point_of_sale</span>
+                        <span>Punto de Venta</span>
+                    </li>
+                    <li data-target="products-view">
+                        <span class="material-icons-round">inventory_2</span>
+                        <span>Productos</span>
+                    </li>
+                    <li data-target="inventory-view">
+                        <span class="material-icons-round">kitchen</span>
+                        <span>Insumos</span>
+                    </li>
+                    <li data-target="sales-view">
+                        <span class="material-icons-round">receipt_long</span>
+                        <span>Ventas</span>
+                    </li>
+                    <li data-target="reports-view">
+                        <span class="material-icons-round">insights</span>
+                        <span>Reportes</span>
+                    </li>
+                    <li data-target="projections-view">
+                        <span class="material-icons-round">trending_up</span>
+                        <span>Proyecciones</span>
+                    </li>
+                </ul>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <span id="user-name">Usuario</span>
+                        <span id="user-role" class="role-badge">Rol</span>
+                    </div>
+                    <button id="logout-btn" class="btn-icon">
+                        <span class="material-icons-round">logout</span>
+                    </button>
+                </div>
+            </nav>
+
+            <main class="content-area">
+                <!-- POS View -->
+                <div id="pos-view" class="view active">
+                    <header class="view-header">
+                        <h2>Punto de Venta</h2>
+                        <div class="search-bar">
+                            <span class="material-icons-round">search</span>
+                            <input type="text" id="pos-search" placeholder="Buscar productos...">
+                        </div>
+                    </header>
+                    <div class="pos-layout">
+                        <div class="products-grid" id="pos-products">
+                            <!-- Products will be injected here -->
+                        </div>
+                        <div class="cart-panel glass-panel">
+                            <h3>Carrito</h3>
+                            <div class="cart-items" id="cart-items">
+                                <!-- Cart items will be injected here -->
+                            </div>
+                            <div class="cart-summary">
+                                <div class="summary-row">
+                                    <span>Subtotal</span>
+                                    <span id="cart-subtotal">$0.00</span>
+                                </div>
+                                <div class="summary-row discount">
+                                    <span>Descuento</span>
+                                    <input type="number" id="cart-discount" placeholder="0" min="0">
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total</span>
+                                    <span id="cart-total">$0.00</span>
+                                </div>
+                                <div class="payment-methods">
+                                    <button class="btn-method active" data-method="efectivo">
+                                        <span class="material-icons-round">payments</span>
+                                        Efectivo
+                                    </button>
+                                    <button class="btn-method" data-method="tarjeta">
+                                        <span class="material-icons-round">credit_card</span>
+                                        Tarjeta
+                                    </button>
+                                    <button class="btn-method" data-method="transferencia">
+                                        <span class="material-icons-round">qr_code</span>
+                                        Transfer
+                                    </button>
+                                </div>
+                                <button id="checkout-btn" class="btn-primary w-100">
+                                    Cobrar $0.00
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products View -->
+                <div id="products-view" class="view">
+                    <header class="view-header">
+                        <h2>Gestión de Productos</h2>
+                        <button class="btn-primary" id="add-product-btn">
+                            <span class="material-icons-round">add</span>
+                            Nuevo Producto
+                        </button>
+                    </header>
+                    <div class="table-container glass-panel">
+                        <table id="products-table">
+                            <thead>
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Nombre</th>
+                                    <th>Categoría</th>
+                                    <th>Precio</th>
+                                    <th>Costo</th>
+                                    <th>Margen</th>
+                                    <th>Stock</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Products table rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Inventory View -->
+                <div id="inventory-view" class="view">
+                    <header class="view-header">
+                        <h2>Insumos y Stock</h2>
+                        <button class="btn-primary" id="add-insumo-btn">
+                            <span class="material-icons-round">add</span>
+                            Nuevo Insumo
+                        </button>
+                    </header>
+                    <div class="kpi-grid">
+                        <div class="kpi-card glass-panel" id="low-stock-kpi">
+                            <h3>Stock Bajo</h3>
+                            <span class="value">0</span>
+                        </div>
+                        <div class="kpi-card glass-panel" id="critical-stock-kpi">
+                            <h3>Crítico</h3>
+                            <span class="value">0</span>
+                        </div>
+                    </div>
+                    <div class="table-container glass-panel">
+                        <table id="inventory-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Unidad</th>
+                                    <th>Costo Unit.</th>
+                                    <th>Stock Actual</th>
+                                    <th>Stock Min.</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Inventory table rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sales View -->
+                <div id="sales-view" class="view">
+                    <header class="view-header">
+                        <h2>Historial de Ventas</h2>
+                        <div class="date-filters">
+                            <button id="sales-today-btn" class="btn-secondary">Hoy</button>
+                            <button id="sales-week-btn" class="btn-secondary">Semana</button>
+                            <button id="sales-month-btn" class="btn-secondary">Mes</button>
+                            <span style="margin: 0 10px;">|</span>
+                            <input type="date" id="sales-start-date">
+                            <input type="date" id="sales-end-date">
+                            <button id="filter-sales-btn" class="btn-secondary">Filtrar</button>
+                        </div>
+                    </header>
+                    <div class="table-container glass-panel">
+                        <table id="sales-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Venta</th>
+                                    <th>Fecha</th>
+                                    <th>Cajero</th>
+                                    <th>Total</th>
+                                    <th>Método</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sales table rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Reports View -->
+                <div id="reports-view" class="view">
+                    <header class="view-header">
+                        <h2>Reportes y Estadísticas</h2>
+                        <select id="report-period" class="select-filter">
+                            <option value="hoy">Hoy</option>
+                            <option value="semana">Esta Semana</option>
+                            <option value="mes">Este Mes</option>
+                        </select>
+                    </header>
+                    <div class="charts-grid">
+                        <div class="chart-card glass-panel">
+                            <h3>Ventas por Día ($)</h3>
+                            <canvas id="sales-chart"></canvas>
+                        </div>
+                        <div class="chart-card glass-panel">
+                            <h3>Top Productos (Cantidad)</h3>
+                            <canvas id="products-qty-chart"></canvas>
+                        </div>
+                        <div class="chart-card glass-panel">
+                            <h3>Top Productos (Dinero $)</h3>
+                            <canvas id="products-rev-chart"></canvas>
+                        </div>
+                        <div class="chart-card glass-panel">
+                            <h3>Métodos de Pago</h3>
+                            <canvas id="methods-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projections View -->
+                <div id="projections-view" class="view">
+                    <header class="view-header">
+                        <h2>Proyecciones y Planificación</h2>
+                        <div class="mode-selector glass-panel" style="padding: 5px; display:flex; gap:10px;">
+                            <button class="btn-secondary active" id="btn-mode-auto">Automática</button>
+                            <button class="btn-secondary" id="btn-mode-manual">Manual</button>
+                        </div>
+                    </header>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card glass-panel">
+                            <span class="material-icons-round" style="color:var(--success)">payments</span>
+                            <div class="value" id="proj-revenue">$0.00</div>
+                            <div class="label">Ventas Est.</div>
+                        </div>
+                        <div class="kpi-card glass-panel">
+                            <span class="material-icons-round" style="color:var(--warning)">shopping_cart</span>
+                            <div class="value" id="proj-cost">$0.00</div>
+                            <div class="label">Inversión Mat.</div>
+                        </div>
+                        <div class="kpi-card glass-panel">
+                            <span class="material-icons-round" style="color:var(--primary)">trending_up</span>
+                            <div class="value" id="proj-profit">$0.00</div>
+                            <div class="label">Ganancia Est.</div>
+                        </div>
+                    </div>
+
+                    <div class="split-view">
+                        <div class="projections-list glass-panel">
+                            <div
+                                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                <h3>Metas de Venta</h3>
+                                <button class="btn-icon" id="add-proj-item" hidden>
+                                    <span class="material-icons-round">add</span>
+                                </button>
+                            </div>
+                            <div class="table-container">
+                                <table class="simple-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th style="width:80px">Meta</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="proj-items-body">
+                                        <!-- Items will be injected here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="btn-calculate-projections" class="btn-primary w-100" style="margin-top:15px;"
+                                hidden>
+                                <span class="material-icons-round">calculate</span>
+                                Calcular Proyección
+                            </button>
+                        </div>
+                        <div class="purchases-preview glass-panel">
+                            <h3>Materia Prima Necesaria</h3>
+                            <div class="table-container">
+                                <table class="simple-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Insumo</th>
+                                            <th>Cant.</th>
+                                            <th>Costo Est.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="proj-shopping-body">
+                                        <!-- Shopping list items -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </section>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-container" class="modal-overlay hidden">
+        <div class="modal glass-panel">
+            <header class="modal-header">
+                <h3 id="modal-title">Título del Modal</h3>
+                <button class="close-modal">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </header>
+            <div id="modal-content" class="modal-content">
+                <!-- Dynamic content -->
+            </div>
+            <footer class="modal-footer">
+                <button class="btn-secondary close-modal">Cancelar</button>
+                <button id="modal-action-btn" class="btn-primary">Guardar</button>
+            </footer>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
+    </script>
+</body>
+
+</html>

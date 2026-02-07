@@ -1,0 +1,28 @@
+# Google Apps Script / Web Development .gitignore
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Credentials & Secrets
+.clasp.json
+creds.json
+*.p12
+*.jks
+*.key
+*.pem
+
+# IDE / System files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.gemini/
+brain/
+implementation_plan.md
+task.md
+walkthrough.md
+
+# Build / Transpiled
+dist/
+build/
